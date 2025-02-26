@@ -30,8 +30,8 @@ def pdf_to_csv(pdf_path, output_path):
 
 
 #Appel fonction
-pdf_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/declaracion_universala_languedocien.pdf"
-output_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/lengadocian"
+pdf_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/declaracion_universala_languedocien.pdf" ##PATH À CHANGER
+output_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/lengadocian" ##PATH À CHANGER
 pdf_to_csv(pdf_path, output_path)
 
 

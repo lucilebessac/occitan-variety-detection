@@ -3,7 +3,7 @@ import os
 
 def recup_2_premieres_colonnes(LoCongres_dossier, output_dossier):
     """
-    Cette fonction garde les deux premières colonnes des csv récupérés sur LoCongres.
+    Cette fonction récupère les deux premières colonnes des csv de LoCongres et recrée un csv avec seulement ces colonnes.
     """
 
     for file in os.listdir(LoCongres_dossier) : 
@@ -23,6 +23,6 @@ def recup_2_premieres_colonnes(LoCongres_dossier, output_dossier):
 
 
 #Appel fonction
-LoCongres_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon"
-output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon"
+LoCongres_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon" ##PATH À CHANGER
+output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon" ##PATH À CHANGER
 recup_2_premieres_colonnes(LoCongres_dossier, output_dossier)
