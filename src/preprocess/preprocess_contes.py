@@ -44,6 +44,6 @@ def preprocess_contes(contes_dossier, output_dossier):
 
 
 ##Appel fonction
-contes_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon" ##PATH À CHANGER
-output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon" ##PATH À CHANGER
+contes_dossier = "../../data/V3/lengadocian/" ##PATH À CHANGER
+output_dossier = "../../data/V3/lengadocian/clean/" ##PATH À CHANGER
 preprocess_contes(contes_dossier, output_dossier)

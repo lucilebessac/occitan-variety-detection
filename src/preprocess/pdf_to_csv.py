@@ -4,8 +4,8 @@ import re
 import os
 
 def decouper_en_phrases(texte):
-    # Séparer sur ".", "?" ou "!" suivi d'un espace ou d'une fin de ligne
-    return re.split(r'(?<=[.!?])\s+', texte)
+    # Séparer sur un caractère de ponctuation de fin de phrase ou un saut de ligne ou une fin de ligne
+    return re.split(r'(?<=[.!?:])\s+', texte)
 
 def pdf_to_csv(pdf_path, output_path):
     pdf_doc = fitz.open(pdf_path)
@@ -25,9 +25,9 @@ def pdf_to_csv(pdf_path, output_path):
                 if phrase:  # Check if phrase is not empty
                     all_phrases.append(phrase)
         
-        # Skip the first 2 sentences and process the rest
-        for phrase in all_phrases[2:]:
-            writer.writerow([phrase, "oc-gascon-grclass"])  # LABEL À CHANGER
+        # SPour skip les 2 premières lignes
+        for phrase in all_phrases: #[2:]
+            writer.writerow([phrase])  # LABEL À CHANGER
                     
     print("Fichier csv crée :", output_path)
 
