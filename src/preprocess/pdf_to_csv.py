@@ -23,15 +23,15 @@ def pdf_to_csv(pdf_path, output_path):
 
             for phrase in phrases:
                 phrase = phrase.strip().replace("\n", " ")
-                writer.writerow([phrase, "oc-lengadoc-grclass"])   ##LABEL À CHANGER 
+                writer.writerow([phrase, "oc-lengadoc-grclass"])   ##LABEL À CHANGER SELON LA VARIANTE
  
 
     print("Fichier csv crée :", output_path)
 
 
 #Appel fonction
-pdf_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/declaracion_universala_languedocien.pdf" ##PATH À CHANGER
-output_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/lengadocian" ##PATH À CHANGER
+pdf_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/declaracion_universala_languedocien.pdf" ##PATH À ADAPTER
+output_path = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/lengadocian" ##PATH À ADAPTER
 pdf_to_csv(pdf_path, output_path)
 
 

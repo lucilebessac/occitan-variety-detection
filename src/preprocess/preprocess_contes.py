@@ -37,13 +37,13 @@ def preprocess_contes(contes_dossier, output_dossier):
 
                 for phrase in phrases : 
                     phrase = phrase.strip()
-                    writer.writerow([phrase, "oc-lengadoc-grclass"])
+                    writer.writerow([phrase, "oc-gascon-grclass"])
                     
             #enregistrer dans le dossier "output_dossier"
             print("Fichier csv crée :", output_path)
 
 
 ##Appel fonction
-contes_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon" ##PATH À CHANGER
-output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon" ##PATH À CHANGER
+contes_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon" ##PATH À ADAPTER
+output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon" ##PATH À ADAPTER
 preprocess_contes(contes_dossier, output_dossier)
