@@ -1,6 +1,7 @@
 import csv 
 import os
 import re
+import fasttext.util
 
 def charger_corpus(dossier_data):
     corpus = []
@@ -37,20 +38,38 @@ def tokenizer_occitan(texte):
 
 def main() : 
 
-    dossier_data = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/DATA_OK" ## PATH À ADAPTER
+    dossier_data = "../../DATA_OK" ## PATH À ADAPTER
 
     # Charger le corpus, obtenir le texte et les labels
     corpus, labels = charger_corpus(dossier_data)
 
     # Tokeniser le corpus
-    tokens_corpus = []
-    for texte in corpus : 
-        tokens_corpus.append(tokenizer_occitan(texte))
+    phrases_tokenisees = [tokenizer_occitan(texte) for texte in corpus]
 
-    for i in range(5):
+    # Vectorisation avec FastText Occitan
+    fasttext.util.download_model('oc', if_exists='ignore')
+    model = fasttext.load_model('cc.oc.300.bin')
+    phrases_vectorisees = []
+    for phrase in phrases_tokenisees :
+        vecteurs_phrase = [model.get_word_vector(mot) for mot in phrase]
+        phrases_vectorisees.append(vecteurs_phrase)
+
+    for i in range(1):
         print(f"Texte original : {corpus[i]}")
-        print(f"Tokens : {tokens_corpus[i]}")
+        print(f"Tokens : {phrases_tokenisees[i]}")
         print(f"Label : {labels[i]}")
+        print(f"Vecteur : {phrases_vectorisees[i]}")
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
