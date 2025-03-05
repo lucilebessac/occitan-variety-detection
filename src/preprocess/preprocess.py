@@ -25,11 +25,23 @@ def preprocess(dossier_data, output_data):
 
                 for ligne in reader : 
 
+                    #vérifie si la ligne est bien formée (2 colonnes)
+                    if len(ligne) != 2:
+                        print(f"Ligne ignorée (mal formée) : {ligne}, fichier {infile}")
+                        continue
+
+                    #supprimer les espaces dans les colonnes
+                    for i in range(len(ligne)):
+                        ligne[i] = ligne[i].strip()
+
                     #changer le label
                     if ligne[1] == "oc-gascon-grclass" :
                         ligne[1] = "0"
                     elif ligne[1] == "oc-lengadoc-grclass" : 
                         ligne[1] = "1"
+                    else:
+                        print(f"Ligne ignorée (label inconnu) : {ligne}")
+                        continue
 
                     #mettre en minuscule
                     ligne[0] = ligne[0].lower()
