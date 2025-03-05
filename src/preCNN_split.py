@@ -2,8 +2,7 @@ import csv
 import os
 import re
 import fasttext.util
-from sklearn.model_selection import KFold
-import numpy as np
+from sklearn.model_selection import train_test_split
 from keras.preprocessing.sequence import pad_sequences
 
 def charger_corpus(dossier_data):
@@ -49,51 +48,39 @@ def main() :
     # Charger le corpus, obtenir le texte et les labels
     corpus, labels = charger_corpus(dossier_data)
 
-    # Validation croisée  
-    kfold = KFold(n_splits=3, shuffle=True, random_state=42)
-    validation_scores = []
+    # Split Train/Test
+    X_train, X_test, y_train, y_test = train_test_split(corpus, labels, test_size=0.2, random_state=42)
 
-    for fold, (train_index, val_index) in enumerate(kfold.split(corpus)):
-        print(f"Fold {fold + 1}") 
-        
-        X_train, X_val = np.array(corpus)[train_index], np.array(corpus)[val_index]
-        y_train, y_val = np.array(labels)[train_index], np.array(labels)[val_index]
+    print(f"Nombre d'exemples dans l'ensemble d'entraînement : {len(X_train)}") #Test
+    print(f"Nombre d'exemples dans l'ensemble de test : {len(X_test)}") #Test
 
-        # Tokeniser le corpus
-        phrases_tokenisees_train = [tokenizer_occitan(texte) for texte in X_train]
-        phrases_tokenisees_val = [tokenizer_occitan(texte) for texte in X_val]
+    # Tokeniser le corpus
+    phrases_tokenisees_train = [tokenizer_occitan(texte) for texte in X_train]
+    phrases_tokenisees_test = [tokenizer_occitan(texte) for texte in X_test]
 
-        print(f"Exemple phrase tokenisé (train) : {phrases_tokenisees_train[0]}") #Test
+    print(f"Exemple phrase tokenisé (train) : {phrases_tokenisees_train[0]}") # Test
 
-        # Vectorisation avec FastText Occitan
-        phrases_vectorisees_train = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_train]
-        phrases_vectorisees_val = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_val]
+    # Vectorisation avec FastText Occitan
+    phrases_vectorisees_train = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_train]
+    phrases_vectorisees_test = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_test]
 
-        print(f"Taille phrase vectorisée (train) : {len(phrases_vectorisees_train[0])}") #Test
-        print(f"Exemple vecteur : {phrases_vectorisees_train[0][0][:5]}...") #Test
+    print(f"Taille phrase vectorisée (train) : {len(phrases_vectorisees_train[0])}") # Test
+    print(f"Exemple vecteur : {phrases_vectorisees_train[0][0][:5]}...") # Test
 
-        # Padding
-        longueur_max = 0
-        for phrase in phrases_vectorisees_train + phrases_vectorisees_val:
-            if len(phrase) > longueur_max:
-                longueur_max = len(phrase)
+    # Padding
+    longueur_max = 0
+    for phrase in phrases_vectorisees_train + phrases_vectorisees_test:
+        if len(phrase) > longueur_max:
+            longueur_max = len(phrase)
 
-        phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=longueur_max, dtype='float16', padding='post') #float16 car pas assez de RAM
-        phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_val, maxlen=longueur_max, dtype='float16', padding='post')
+    phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=longueur_max, dtype="float16", padding="post") 
+    phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=longueur_max, dtype="float16", padding="post")
 
-        print(f"Longueur maximale après padding : {longueur_max}") #Test
-        print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") #Test
+    print(f"Longueur maximale après padding : {longueur_max}") # Test
+    print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") # Test
 
-        ## (à compléter)
-        # Implémenter le CNN
-  
-        # Entrainer le CNN 
-        #model_cnn.fit(blablablabla)
-        
-        break #faire qu'un split pour le test 
-
+    ## (à compléter) CNN etc.
 
 
 if __name__ == "__main__":
     main()
-
