@@ -2,6 +2,9 @@ import csv
 import os
 import re
 import fasttext.util
+from sklearn.model_selection import KFold
+import numpy as np
+from keras.preprocessing.sequence import pad_sequences
 
 def charger_corpus(dossier_data):
     corpus = []
@@ -19,7 +22,6 @@ def charger_corpus(dossier_data):
                         labels.append(int(ligne[1]))  #Label (0 ou 1)
                     else:
                         print(f"Ligne ignorée (mal formée) dans {fichier} : {ligne}") 
-
     return corpus, labels
 
 def tokenizer_occitan(texte):
@@ -40,35 +42,55 @@ def main() :
 
     dossier_data = "../../DATA_OK" ## PATH À ADAPTER
 
+    # Télécharger le modèle FastText occitan
+    fasttext.util.download_model('oc', if_exists='ignore')
+    model = fasttext.load_model('cc.oc.300.bin') 
+
     # Charger le corpus, obtenir le texte et les labels
     corpus, labels = charger_corpus(dossier_data)
 
-    # Tokeniser le corpus
-    phrases_tokenisees = [tokenizer_occitan(texte) for texte in corpus]
+    # Validation croisée  
+    kfold = KFold(n_splits=3, shuffle=True, random_state=42)
+    validation_scores = []
 
-    # Vectorisation avec FastText Occitan
-    fasttext.util.download_model('oc', if_exists='ignore')
-    model = fasttext.load_model('cc.oc.300.bin')
-    phrases_vectorisees = []
-    for phrase in phrases_tokenisees :
-        vecteurs_phrase = [model.get_word_vector(mot) for mot in phrase]
-        phrases_vectorisees.append(vecteurs_phrase)
+    for fold, (train_index, val_index) in enumerate(kfold.split(corpus)):
+        print(f"Fold {fold + 1}") 
+        
+        X_train, X_val = np.array(corpus)[train_index], np.array(corpus)[val_index]
+        y_train, y_val = np.array(labels)[train_index], np.array(labels)[val_index]
 
-    for i in range(1):
-        print(f"Texte original : {corpus[i]}")
-        print(f"Tokens : {phrases_tokenisees[i]}")
-        print(f"Label : {labels[i]}")
-        print(f"Vecteur : {phrases_vectorisees[i]}")
+        # Tokeniser le corpus
+        phrases_tokenisees_train = [tokenizer_occitan(texte) for texte in X_train]
+        phrases_tokenisees_val = [tokenizer_occitan(texte) for texte in X_val]
 
+        print(f"Exemple phrase tokenisé (train) : {phrases_tokenisees_train[0]}") #Test
 
+        # Vectorisation avec FastText Occitan
+        phrases_vectorisees_train = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_train]
+        phrases_vectorisees_val = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_val]
 
+        print(f"Taille phrase vectorisée (train) : {len(phrases_vectorisees_train[0])}") #Test
+        print(f"Exemple vecteur : {phrases_vectorisees_train[0][0][:5]}...") #Test
 
+        # Padding
+        longueur_max = 0
+        for phrase in phrases_vectorisees_train + phrases_vectorisees_val:
+            if len(phrase) > longueur_max:
+                longueur_max = len(phrase)
 
+        phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=longueur_max, dtype='float16', padding='post') #float16 car pas assez de RAM
+        phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_val, maxlen=longueur_max, dtype='float16', padding='post')
 
+        print(f"Longueur maximale après padding : {longueur_max}") #Test
+        print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") #Test
 
-
-
-
+        ## (à compléter)
+        # Implémenter le CNN
+  
+        # Entrainer le CNN 
+        #model_cnn.fit(blablablabla)
+        
+        break #faire qu'un split pour le test 
 
 
 
