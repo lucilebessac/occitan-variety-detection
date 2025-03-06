@@ -87,11 +87,19 @@ def main() :
     y_test_tensor = torch.tensor(y_test, dtype=torch.long)
     print(f"Conversion en tensor effectuée.") # Test
 
-    # Faire des batches (petits groupes d'exemples)
+    #Couche d'embedding 
+
+    #Couches convolutives
+
+    #Couche max-pooling
+
+    #Activation ReLU ?
+
+    #Couche Softmax
+    
+    # Faire des batches (petits groupes d'exemples) pour l'entrainement
 
 
-
-    ## (à compléter) CNN etc.
 
 
 if __name__ == "__main__":

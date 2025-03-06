@@ -5,6 +5,7 @@ import fasttext.util
 from sklearn.model_selection import KFold
 import numpy as np
 from keras.preprocessing.sequence import pad_sequences
+import torch
 
 def charger_corpus(dossier_data):
     corpus = []
@@ -56,33 +57,41 @@ def main() :
     for fold, (train_index, val_index) in enumerate(kfold.split(corpus)):
         print(f"Fold {fold + 1}") 
         
+        # Diviser les données en train/validation pour ce fold
         X_train, X_val = np.array(corpus)[train_index], np.array(corpus)[val_index]
         y_train, y_val = np.array(labels)[train_index], np.array(labels)[val_index]
 
-        # Tokeniser le corpus
-        phrases_tokenisees_train = [tokenizer_occitan(texte) for texte in X_train]
-        phrases_tokenisees_val = [tokenizer_occitan(texte) for texte in X_val]
+        # Limiter la longueur des phrases (99e percentile) (car problème de RAM)
+        longueurs = [len(tokenizer_occitan(texte)) for texte in X_train] + [len(tokenizer_occitan(texte)) for texte in X_val]
+        max_len = int(np.percentile(longueurs, 99))
+        print(f"Longueur maximale après percentile 99% : {max_len}")
 
-        print(f"Exemple phrase tokenisé (train) : {phrases_tokenisees_train[0]}") #Test
-
-        # Vectorisation avec FastText Occitan
-        phrases_vectorisees_train = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_train]
-        phrases_vectorisees_val = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_val]
-
-        print(f"Taille phrase vectorisée (train) : {len(phrases_vectorisees_train[0])}") #Test
-        print(f"Exemple vecteur : {phrases_vectorisees_train[0][0][:5]}...") #Test
+        # Tokenisation et Vectorisation avec FastText Occitan
+        phrases_vectorisees_train = []
+        for texte in X_train:
+            phrase_tokenisee = tokenizer_occitan(texte)
+            phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+            phrases_vectorisees_train.append(phrase_vectorisee)
+        print(f"X_train est tokenisée et vectorisée.")  # Test
+        
+        phrases_vectorisees_val = []
+        for texte in X_val:
+            phrase_tokenisee = tokenizer_occitan(texte)
+            phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+            phrases_vectorisees_val.append(phrase_vectorisee)
+        print(f"X_val est tokenisée et vectorisée.")
 
         # Padding
-        longueur_max = 0
-        for phrase in phrases_vectorisees_train + phrases_vectorisees_val:
-            if len(phrase) > longueur_max:
-                longueur_max = len(phrase)
+        phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=max_len, dtype="float32", padding="post")
+        phrases_vectorisees_val_padded = pad_sequences(phrases_vectorisees_val, maxlen=max_len, dtype="float32", padding="post")
+        print(f"Le padding a été effectué.")
 
-        phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=longueur_max, dtype='float16', padding='post') #float16 car pas assez de RAM
-        phrases_vectorisees_val_padded = pad_sequences(phrases_vectorisees_val, maxlen=longueur_max, dtype='float16', padding='post')
-
-        print(f"Longueur maximale après padding : {longueur_max}") #Test
-        print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") #Test
+        # Conversion en tensors exploitables par Pytorch
+        X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
+        X_val_tensor = torch.tensor(phrases_vectorisees_val_padded, dtype=torch.float32)
+        y_train_tensor = torch.tensor(y_train, dtype=torch.long)
+        y_val_tensor = torch.tensor(y_val, dtype=torch.long)
+        print(f"Conversion en tensor effectuée.")  # Test
 
         ## (à compléter)
         # Implémenter le CNN
