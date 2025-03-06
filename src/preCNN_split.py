@@ -96,8 +96,9 @@ def main() :
     #Activation ReLU ?
 
     #Couche Softmax
-    
-    # Faire des batches (petits groupes d'exemples) pour l'entrainement
+
+    # Faire des batches (petits groupes d'exemples) pour l'entrainement 
+        #utiliser DataLoader
 
 
 
