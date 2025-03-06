@@ -4,6 +4,7 @@ import re
 import fasttext.util
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.sequence import pad_sequences
+import torch
 
 def charger_corpus(dossier_data):
     corpus = []
@@ -78,6 +79,18 @@ def main() :
 
     print(f"Longueur maximale après padding : {longueur_max}") # Test
     print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") # Test
+
+    # Conversion en tensors exploitables par Pytorch
+    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float16)
+    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float16)
+    y_train_tensor = torch.tensor(y_train, dtype=torch.long)
+    y_test_tensor = torch.tensor(y_test, dtype=torch.long)
+
+    print(f"Shape tensor {X_train_tensor.shape}") # Test
+
+    # Faire des batches (petits groupes d'exemples)
+
+
 
     ## (à compléter) CNN etc.
 
