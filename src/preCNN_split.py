@@ -3,6 +3,7 @@ import os
 import re
 import fasttext.util
 from sklearn.model_selection import train_test_split
+import numpy as np
 from keras.preprocessing.sequence import pad_sequences
 import torch
 
@@ -51,42 +52,40 @@ def main() :
 
     # Split Train/Test
     X_train, X_test, y_train, y_test = train_test_split(corpus, labels, test_size=0.2, random_state=42)
-
     print(f"Nombre d'exemples dans l'ensemble d'entraînement : {len(X_train)}") #Test
     print(f"Nombre d'exemples dans l'ensemble de test : {len(X_test)}") #Test
 
-    # Tokeniser le corpus
-    phrases_tokenisees_train = [tokenizer_occitan(texte) for texte in X_train]
-    phrases_tokenisees_test = [tokenizer_occitan(texte) for texte in X_test]
+    # Limiter la longueur des phrases (99e percentile) (car problème de RAM)
+    longueurs = [len(tokenizer_occitan(texte)) for texte in X_train + X_test]
+    max_len = int(np.percentile(longueurs, 99))
+    print(f"Longueur maximale après percentile 99% : {max_len}") #Test
 
-    print(f"Exemple phrase tokenisé (train) : {phrases_tokenisees_train[0]}") # Test
-
-    # Vectorisation avec FastText Occitan
-    phrases_vectorisees_train = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_train]
-    phrases_vectorisees_test = [[model.get_word_vector(mot) for mot in phrase] for phrase in phrases_tokenisees_test]
-
-    print(f"Taille phrase vectorisée (train) : {len(phrases_vectorisees_train[0])}") # Test
-    print(f"Exemple vecteur : {phrases_vectorisees_train[0][0][:5]}...") # Test
+    # Tokenisation et Vectorisation
+    phrases_vectorisees_train = []
+    for texte in X_train:
+        phrase_tokenisee = tokenizer_occitan(texte)
+        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrases_vectorisees_train.append(phrase_vectorisee)
+    print(f"X_train est tokenisée et vectorisée.") # Test
+    
+    phrases_vectorisees_test = []
+    for texte in X_test:
+        phrase_tokenisee = tokenizer_occitan(texte)
+        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrases_vectorisees_test.append(phrase_vectorisee)
+    print(f"X_test est tokenisée et vectorisée.") # Test
 
     # Padding
-    longueur_max = 0
-    for phrase in phrases_vectorisees_train + phrases_vectorisees_test:
-        if len(phrase) > longueur_max:
-            longueur_max = len(phrase)
-
-    phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=longueur_max, dtype="float16", padding="post") 
-    phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=longueur_max, dtype="float16", padding="post")
-
-    print(f"Longueur maximale après padding : {longueur_max}") # Test
-    print(f"Exemple après padding : {phrases_vectorisees_train_padded[0][:5]}...") # Test
+    phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=max_len, dtype="float32", padding="post") 
+    phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=max_len, dtype="float32", padding="post")
+    print(f"Le padding a été effectué.") # Test
 
     # Conversion en tensors exploitables par Pytorch
-    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float16)
-    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float16)
+    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
+    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float32)
     y_train_tensor = torch.tensor(y_train, dtype=torch.long)
     y_test_tensor = torch.tensor(y_test, dtype=torch.long)
-
-    print(f"Shape tensor {X_train_tensor.shape}") # Test
+    print(f"Conversion en tensor effectuée.") # Test
 
     # Faire des batches (petits groupes d'exemples)
 
