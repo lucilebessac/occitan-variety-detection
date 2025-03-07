@@ -1,6 +1,7 @@
 from dataset import charger_corpus, tokenizer_occitan
 from occitanCNN import OccitanCNN
 from utils import compter_labels
+from training import train_model, evaluate_model
 
 import fasttext.util
 import numpy as np
@@ -51,8 +52,8 @@ def main() :
     print(f"Le padding a été effectué.") # Test
 
     # Conversion en tensors exploitables par Pytorch
-    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float16)
-    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float16)
+    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
+    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float32)
     y_train_tensor = torch.tensor(y_train, dtype=torch.long)
     y_test_tensor = torch.tensor(y_test, dtype=torch.long)
     print(f"Conversion en tensor effectuée.") # Test
@@ -71,14 +72,24 @@ def main() :
     criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
 
     # Initialisation du modèle
-    #model = OccitanCNN()
+    model = OccitanCNN()
+    print(f"Model Occitan CNN initialisé, lancement de l'entrainement.")
 
     # Lancer le train
-
-
+    epochs = 15
+    learning_rate = 0.003
+    train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     # Lancer l'évaluation
+    avg_loss, accuracy, precision, recall, f1 = evaluate_model(model, test_loader, criterion)
 
+    #Affichage des résultats
+    print(f"\nRésultats de l'évaluation :")
+    print(f"Average Loss: {avg_loss:.4f}")
+    print(f"Accuracy: {accuracy*100:.2f}%")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1 Score: {f1:.4f}")
 
 
 if __name__ == "__main__":

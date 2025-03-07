@@ -13,7 +13,7 @@ class OccitanCNN(nn.Module):
     #Couches convolutives
 
         # Couches convolutives avec différentes tailles de filtres (kernels) : Bi-grams, tri_grams etc
-        self.conv1 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=2)
+        self.conv1 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=2) #padding="same" ? 
         self.conv2 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=3)
         self.conv3 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=4)
 
