@@ -76,8 +76,8 @@ def main() :
     print(f"Model Occitan CNN initialisé, lancement de l'entrainement.")
 
     # Lancer le train
-    epochs = 3
-    learning_rate = 0.001
+    epochs = 15
+    learning_rate = 0.0005
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     # Lancer l'évaluation
