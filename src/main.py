@@ -28,7 +28,7 @@ def main() :
 
     # Limiter la longueur des phrases (car problème de RAM)
     longueurs = [len(tokenizer_occitan(texte)) for texte in X_train + X_test]
-    max_len = int(np.percentile(longueurs, 90))
+    max_len = int(np.percentile(longueurs, 95))
     print(f"Longueur maximale après percentile 90% : {max_len}") #Test
 
     # Tokenisation et Vectorisation
@@ -68,7 +68,7 @@ def main() :
     print(f"DataLoaders créés.") # Test
 
     # Gestion du déséquilibre des classes
-    class_weights = compter_labels(y_train)
+    class_weights = compter_labels(y_train, nbr_classes=3)
     criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
 
     # Initialisation du modèle
@@ -76,16 +76,17 @@ def main() :
     print(f"Model Occitan CNN initialisé, lancement de l'entrainement.")
 
     # Lancer le train
-    epochs = 15
-    learning_rate = 0.003
+    epochs = 20
+    learning_rate = 0.001
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     # Lancer l'évaluation
-    avg_loss, accuracy, precision, recall, f1 = evaluate_model(model, test_loader, criterion)
+    avg_loss, accuracy, precision, recall, f1, classification_report = evaluate_model(model, test_loader, criterion)
 
     #Affichage des résultats
     print(f"\nRésultats de l'évaluation :")
     print(f"Average Loss: {avg_loss:.4f}")
+    print(f"Classification Report : {classification_report}")
     print(f"Accuracy: {accuracy*100:.2f}%")
     print(f"Precision: {precision:.4f}")
     print(f"Recall: {recall:.4f}")
