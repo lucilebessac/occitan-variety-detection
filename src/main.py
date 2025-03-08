@@ -1,6 +1,6 @@
 from dataset import charger_corpus, tokenizer_occitan
 from occitanCNN import OccitanCNN
-from utils import compter_labels
+from utils import compter_labels, save_results
 from training import train_model, evaluate_model
 
 import fasttext.util
@@ -28,8 +28,8 @@ def main() :
 
     # Limiter la longueur des phrases (car problème de RAM)
     longueurs = [len(tokenizer_occitan(texte)) for texte in X_train + X_test]
-    max_len = int(np.percentile(longueurs, 95))
-    print(f"Longueur maximale après percentile 90% : {max_len}") #Test
+    max_len = int(np.percentile(longueurs, 99))
+    print(f"Longueur maximale après percentile 99% : {max_len}") #Test
 
     # Tokenisation et Vectorisation
     phrases_vectorisees_train = []
@@ -59,12 +59,12 @@ def main() :
     print(f"Conversion en tensor effectuée.") # Test
 
     # Faire des batches 
-    train_data = TensorDataset(X_train_tensor, y_train_tensor) # Chaque item est un tuple
+    train_data = TensorDataset(X_train_tensor, y_train_tensor) 
     test_data = TensorDataset(X_test_tensor, y_test_tensor)
 
-    batch_size = 16 # Taille des petits groupes (batches) pour pas tout process d'un coup
-    train_loader = DataLoader(train_data, shuffle=True, batch_size=batch_size) # Askip on Shuffle pour réduire les biais, ça parait logique mais j'ai pas compris en profondeur
-    test_loader = DataLoader(test_data, batch_size=batch_size) # Pas besoin de shuffle pour le test
+    batch_size = 16 
+    train_loader = DataLoader(train_data, shuffle=True, batch_size=batch_size) 
+    test_loader = DataLoader(test_data, batch_size=batch_size) 
     print(f"DataLoaders créés.") # Test
 
     # Gestion du déséquilibre des classes
@@ -76,21 +76,26 @@ def main() :
     print(f"Model Occitan CNN initialisé, lancement de l'entrainement.")
 
     # Lancer le train
-    epochs = 20
+    epochs = 3
     learning_rate = 0.001
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     # Lancer l'évaluation
-    avg_loss, accuracy, precision, recall, f1, classification_report = evaluate_model(model, test_loader, criterion)
+    print(f"Evaluation de Model Occitan CNN en cours.")
+    avg_loss, accuracy, precision, recall, f1, classif_report = evaluate_model(model, test_loader, criterion)
 
-    #Affichage des résultats
-    print(f"\nRésultats de l'évaluation :")
+    # Affichage des résultats
+    print(f"\nRésultats de l'évaluation avec epoch={epochs} et learning rate={learning_rate} :")
     print(f"Average Loss: {avg_loss:.4f}")
-    print(f"Classification Report : {classification_report}")
+    print("\nClassification Report:\n", classif_report)
     print(f"Accuracy: {accuracy*100:.2f}%")
     print(f"Precision: {precision:.4f}")
     print(f"Recall: {recall:.4f}")
     print(f"F1 Score: {f1:.4f}")
+
+    # Enregistrement des résultats
+    save_results(epochs, learning_rate, avg_loss, accuracy, precision, recall, f1, classif_report)
+    print(f"Les résultats ont été sauvegardés dans le dossier results.")
 
 
 if __name__ == "__main__":

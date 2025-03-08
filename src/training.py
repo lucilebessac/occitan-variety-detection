@@ -50,13 +50,13 @@ def evaluate_model(model, test_loader, criterion):
             total_exemples.extend(label.cpu().numpy()) # Stocke les labels réels  #.cpu c'est pour repasser en cpu car numpy ne manipule pas les trucs sur gpu
             total_pred.extend(predicted.cpu().numpy()) # Stocke les prédictions
 
-            avg_loss = total_loss / len(test_loader)
+        avg_loss = total_loss / len(test_loader)
 
         # Calcul des métriques
-        classification_report = classification_report(total_exemples, total_pred) #Test
+        classif_report = classification_report(total_exemples, total_pred)
         accuracy = accuracy_score(total_exemples, total_pred)
         precision = precision_score(total_exemples, total_pred, average='weighted')
         recall = recall_score(total_exemples, total_pred, average='weighted')
         f1 = f1_score(total_exemples, total_pred, average='weighted')
 
-    return avg_loss, accuracy, precision, recall, f1, classification_report
+    return avg_loss, accuracy, precision, recall, f1, classif_report
