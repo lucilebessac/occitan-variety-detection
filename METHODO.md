@@ -45,6 +45,7 @@ Nous avons donc commencé avec :
 ### Outils utilisés
 - **PyTorch**: Framework de ML qui permet d’implémenter le CNN
 - **FastText**: Pour les embeddings de mots en occitan (modèle cc.oc.300.bin)
+- **Tokenizer**: Tokenization for Occitan (Gascon and Lengadocian) par Marianne Vergez-Couret et Miletic Aleksandra
 - **Keras**: Pour certaines fonctionnalités de prétraitement (pad_sequences)
 - **NumPy**: Pour les manipulations numériques / matricielles
 - **Scikit-learn**: Pour la division des données et les métriques d'évaluation
@@ -98,4 +99,4 @@ Ce projet nous a permis de développer une première version d’un détecteur n
 
 Malgré nos limites, les résultats sont assez encourageants et nous pensons qu’en effectuant le travail nécessaire pour la collecte de données pour constituer des corpus, un détecteur prenant en compte toutes les variétés pourrait être développé.
 
-Il serait intéressant de comparer cette approche à une approche moins coûteuse en puissance de calcul comme une technique hybride à base de règles. Il ne semble peut-être pas nécessaire, pour une simple tâche de classification binaire et alors que les différences entre les dialectes sont lexicales et orthographiques, d’utiliser un réseau de neurones. 
+Il serait intéressant de comparer cette approche à une approche moins coûteuse en puissance de calcul comme une technique hybride à base de règles. Il ne semble peut-être pas nécessaire, pour une simple tâche de classification et alors que les différences entre les dialectes sont lexicales et orthographiques, d’utiliser un réseau de neurones. 
