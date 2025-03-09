@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 
 def main() : 
 
-    dossier_data = "../../DATA_OK" ## PATH À ADAPTER
+    dossier_data = "../data" ## PATH À ADAPTER
 
     # Télécharger le modèle FastText occitan
     fasttext.util.download_model('oc', if_exists='ignore')

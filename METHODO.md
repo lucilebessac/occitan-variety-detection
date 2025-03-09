@@ -61,11 +61,11 @@ Nous avons donc commencé avec :
 - **Entrainement : Pourquoi ces hyperparamètres ?** : 
    - Learning rate : 0.0005
    - Epoch : 15  
-   Après plusieurs tests, nous avons obtenus les meilleurs performances avec les hyperparamètres ci-dessus.
+   Après plusieurs tests, nous avons obtenu les meilleurs performances avec les hyperparamètres ci-dessus.
 
 ### Pipeline
 
-Décrite dans README.md
+Décrite dans [README.md](README.md)
 
 ## Résultats et discussion
 

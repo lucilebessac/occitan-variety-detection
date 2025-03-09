@@ -27,7 +27,7 @@ Ce projet est un classifieur de variété de textes en langue occitane utilisant
 Avant de lancer le programme, adaptez le chemin vers vos données dans le programme principal `main.py`:
 ```python
 # line 15
-dossier_data = "../../DATA_OK"
+dossier_data = "../data"
 ```
 
 NB : le corpus doit contenir un ou plusieurs fichiers `.csv` de 2 colonnes ayant comme séparateur `§`.
@@ -39,6 +39,8 @@ La colonne 1 contient une phrase en occitan et la colonne 2 contient le label :
 
 Des outils pour formatter votre corpus sont disponibles dans le dossier `./src/preprocess_corpus`
 
+> La composition de notre corpus d'entraînement et de test est décrite dans [README_CORPUS.md](README_CORPUS.md)
+
 ## Utilisation
 Lancez le programme principal :
 ```
@@ -46,11 +48,11 @@ python main.py
 ```
 
 ## Structure du Projet
-- `main.py` : Programme principal
-- `dataset.py` : Fonctions pour charger et tokenizer le corpus occitan
-- `occitanCNN.py` : Définition du CNN
-- `utils.py` : Fonctions outils (équilibrer les poids selon les classes et sauvegarde des résultats)
-- `training.py` : Fonctions d'entraînement et d'évaluation
+- `src/main.py` : Programme principal
+- `src/dataset.py` : Fonctions pour charger et tokenizer le corpus occitan
+- `src/occitanCNN.py` : Définition du CNN
+- `src/utils.py` : Fonctions outils (équilibrer les poids selon les classes et sauvegarde des résultats)
+- `src/training.py` : Fonctions d'entraînement et d'évaluation
 
 ## Pipeline
 Le programme suit les étapes suivantes :
@@ -68,6 +70,8 @@ Le programme suit les étapes suivantes :
    4. Softmax
 9.  Entrainer le CNN
 10. Évaluler le CNN (précision, rappel, F1)
+
+> Notre méthodologie de travail est détaillée dans [METHODO.md](METHODO.md)
 
 ## Paramètres
 - Taille de batch : 16
