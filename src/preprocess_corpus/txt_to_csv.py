@@ -30,6 +30,6 @@ def preprocess_simple_txt(txt_dossier, output_dossier):
             print("Fichier csv crée :", output_path)
 
 # Appel fonction
-txt_dossier = "../../data/V3/lengadocian/"  # PATH À CHANGER
-output_dossier = "../../data/V3/lengadocian/clean/"  # PATH À CHANGER
+txt_dossier = "../data/"  # PATH À CHANGER
+output_dossier = "../data/clean/"  # PATH À CHANGER
 preprocess_simple_txt(txt_dossier, output_dossier)

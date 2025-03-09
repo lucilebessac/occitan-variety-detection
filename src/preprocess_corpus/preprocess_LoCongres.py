@@ -23,6 +23,6 @@ def recup_2_premieres_colonnes(LoCongres_dossier, output_dossier):
 
 
 #Appel fonction
-LoCongres_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data/gascon" ##PATH À CHANGER
-output_dossier = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/data_OK/gascon" ##PATH À CHANGER
+LoCongres_dossier = "../data/" ##PATH À CHANGER
+output_dossier = "../data/" ##PATH À CHANGER
 recup_2_premieres_colonnes(LoCongres_dossier, output_dossier)

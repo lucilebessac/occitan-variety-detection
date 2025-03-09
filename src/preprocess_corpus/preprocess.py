@@ -56,6 +56,6 @@ def preprocess(dossier_data, output_data):
                     
 
 #Appel fonction
-dossier_data = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/all_data" ##PATH À ADAPTER
-output_data = "/Users/manongourves/Desktop/Master_TAL/M2/S2/neural_net/projet/DATA_OK" ##PATH À ADAPTER
+dossier_data = "../data/" ##PATH À ADAPTER
+output_data = "../data/" ##PATH À ADAPTER
 preprocess(dossier_data, output_data)

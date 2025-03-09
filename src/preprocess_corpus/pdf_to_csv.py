@@ -40,6 +40,6 @@ def process_directory(pdf_dir, output_dir):
 
 # Appel fonction
 # pour tous les fichiers pdf dans le chemin donné
-pdf_dir = "../../data/V3/gascon/"  # PATH À CHANGER
-output_dir = "../../data/V3/gascon/"  # PATH À CHANGER
+pdf_dir = "../data/"  # PATH À CHANGER
+output_dir = "../data/"  # PATH À CHANGER
 process_directory(pdf_dir, output_dir)

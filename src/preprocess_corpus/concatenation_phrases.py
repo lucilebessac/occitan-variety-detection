@@ -29,6 +29,6 @@ def process_directory(input_dir, output_dir):
 
 # Appel fonction
 # pour tous les fichiers csv dans le chemin donné
-input_dir = "../../data/V3/gascon/"  # PATH À CHANGER
-output_dir = "../../data/V3/gascon/"  # PATH À CHANGER
+input_dir = "../data/"  # PATH À CHANGER
+output_dir = "../data/"  # PATH À CHANGER
 process_directory(input_dir, output_dir)
