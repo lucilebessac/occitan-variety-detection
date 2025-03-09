@@ -1,0 +1,11 @@
+Epoch,Learning Rate,Average Loss,Accuracy,Precision,Recall,F1 Score,Classification Report
+5,0.03,0.7748466651178313,0.9572587412587412,0.952961158607667,0.9572587412587412,0.9506277735549391,"              precision    recall  f1-score   support
+
+           0       0.83      0.42      0.56      2282
+           1       0.96      0.99      0.98     33467
+           2       0.00      0.00      0.00         1
+
+    accuracy                           0.96     35750
+   macro avg       0.60      0.47      0.51     35750
+weighted avg       0.95      0.96      0.95     35750
+"
