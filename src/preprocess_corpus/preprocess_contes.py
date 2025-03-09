@@ -44,6 +44,6 @@ def preprocess_contes(contes_dossier, output_dossier):
 
 
 ##Appel fonction
-contes_dossier = "../../data/V3/lengadocian/" ##PATH À CHANGER
-output_dossier = "../../data/V3/lengadocian/clean/" ##PATH À CHANGER
+contes_dossier = "../data/" ##PATH À CHANGER
+output_dossier = "../data/clean/" ##PATH À CHANGER
 preprocess_contes(contes_dossier, output_dossier)
