@@ -50,17 +50,18 @@ Nous avons donc commencé avec :
 - **Scikit-learn**: Pour la division des données et les métriques d'évaluation
 
 ### Architecture du réseau neuronal
-- **Pourquoi un CNN**:
-   - D’après nos recherches, les CNN nécessitent souvent moins de données d'entraînement que d’autres architectures, ce qui est particulièrement intéressant dans notre contexte avec une langue peu dotée
+- **Pourquoi un CNN ?**:
+   - D’après nos recherches, les CNN nécessitent souvent moins de données d'entraînement que d’autres architectures, ce qui est particulièrement intéressant dans notre contexte avec une langue peu dotée.
    - Les CNN semblent détecter des motifs indépendamment de leur position, ce qui est adapté ici puisque les principales différences entre dialectes de l’occitan sont lexicales et orthographiques et non syntaxiques. Pas besoin donc d’utiliser un RNN qui prendrait en compte l’ordre des tokens.
-   - De plus, les CNN son plus rapides à entraîner ce qui est une différence non négligeable
-- **Pourquoi Max pooling** : 
-   - Afin de sélectionner les caractéristiques les plus importantes et réduisant la dimensionnalité
-- **Pourquoi ces 3 tailles de filtres** : 
-  - Pour introduire des granularités différentes
-- **Pourquoi ces hyperparamètres d’entrainement** : 
-   - Learning rate : 
-   - Epoch : 
+   - De plus, les CNN son plus rapides à entraîner ce qui est une différence non négligeable.
+- **Couches convolutives : Pourquoi ces 3 tailles de filtres ?** : 
+  - Pour introduire des granularités différentes (Bi-grams, tri_grams, quadri-grams)
+- **Couche Pooling : Pourquoi Max pooling ?** : 
+   - Sélectionner la valeur maximum afin de capturer les caractéristiques les plus importantes tout en réduisant la dimensionnalité.
+- **Entrainement : Pourquoi ces hyperparamètres ?** : 
+   - Learning rate : 0.0005
+   - Epoch : 15  
+   Après plusieurs tests, nous avons obtenus les meilleurs performances avec les hyperparamètres ci-dessus.
 
 ### Pipeline
 
@@ -76,18 +77,18 @@ Décrite dans README.md
 
 ### Limites
 
-- **Corpus limité**: Les ressources pour l'occitan sont limitées, même pour les 2 dialectes les mieux dotés
+- **Corpus limité**: Les ressources pour l'occitan sont limitées, même pour les 2 dialectes les mieux dotés.
 - **Données parfois peu qualitatives** : Orthographe pas toujours fixée, mélanges de dialectes, mélanges de langues, phrases mal découpées …
 - **Classification binaire uniquement**: Nous nous limitons pour l’instant à 2 dialectes au lieu de 6.
 - **Absence de couche d'embedding personnalisée**: Nous utilisons directement les embeddings FastText sans apprendre une couche d'embedding spécifique à notre tâche.
-- **Difficulté avec la classe "inconnu"**: Nous aimerions que notre classifieur intègre une classe “autre” ou “inconnu” au cas où on lui donne en input quelque chose qui n’est ni du gascon ni du languedocien.
-- **Ressources computationnelles** : 
+- **Difficulté avec la classe "autre"**: Nous aimerions que notre classifieur intègre une classe “autre” ou “inconnu” au cas où on lui donne en input quelque chose qui n’est ni du gascon ni du languedocien. Nous avons commencer à l'integrer à notre corpus comme ébauche.
+- **Ressources computationnelles** : Essai d'adapter le script pour convenir à nos ressources computationnelles mais différents messages d'erreurs. Nous avons été obligées de nous organiser car seule une personne du groupe avait les ressources pour lancer les scripts complets d'entrainement/évaluation (avec des temps très longs).
 
 
 ### Perspectives d'amélioration
 Pour les développements futurs, nous envisageons:
 - **Extension à d'autres dialectes et/ou langues**: Intégrer progressivement les quatre autres variétés dialectales (provençal, auvergnat, limousin, vivaro-alpin).
-- **Enrichissement du corpus**: Collecter davantage de textes et de meilleure qualité
+- **Enrichissement du corpus**: Collecter davantage de textes et de meilleure qualité.
 - **Détection du “code-switching”** : l’idéal serait de réussir à détecter les mélanges de langues ou de dialectes.
 - **Embedding**: Implémenter des embeddings appris.
 

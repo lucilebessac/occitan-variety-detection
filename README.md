@@ -35,6 +35,7 @@ NB : le corpus doit contenir un ou plusieurs fichiers `.csv` de 2 colonnes ayant
 La colonne 1 contient une phrase en occitan et la colonne 2 contient le label :
 - 0 pour le gascon
 - 1 pour le languedocien
+- 2 pour autre
 
 Des outils pour formatter votre corpus sont disponibles dans le dossier `./src/preprocess_corpus`
 
@@ -48,7 +49,7 @@ python main.py
 - `main.py` : Programme principal
 - `dataset.py` : Fonctions pour charger et tokenizer le corpus occitan
 - `occitanCNN.py` : Définition du CNN
-- `utils.py` : Fonctions outils, dont 1 pour compter les labels
+- `utils.py` : Fonctions outils (équilibrer les poids selon les classes et sauvegarde des résultats)
 - `training.py` : Fonctions d'entraînement et d'évaluation
 
 ## Pipeline
@@ -71,11 +72,12 @@ Le programme suit les étapes suivantes :
 ## Paramètres
 - Taille de batch : 16
 - Nombre d'epoch : 15
-- Leraning rate : 0.003
+- Leraning rate : 0.0005
 
 ## Résultats
 À la fin de l'exécution, le programme affiche les métriques :
 - Loss moyenne
+- Rapport de classification
 - Accuracy
 - Precision
 - Rappel
