@@ -5,19 +5,14 @@ class OccitanCNN(nn.Module):
     def __init__(self, fasttext_embedding_dim=300, nb_filtres=100):
         super(OccitanCNN, self).__init__()
 
-    #Couche d'embedding 
-
-        # Si je comprends bien, pas besoin de re faire l'embedding, on peut utiliser celui de FastText ?
-        # Aaah on en a parlé mais je me souviens pas, au pire ce sera une ligne à ajouter
-
     #Couches convolutives
 
         # Couches convolutives avec différentes tailles de filtres (kernels) : Bi-grams, tri_grams etc
-        self.conv1 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=2) #padding="same" ? 
+        self.conv1 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=2) 
         self.conv2 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=3)
         self.conv3 = nn.Conv1d(in_channels=fasttext_embedding_dim, out_channels=nb_filtres, kernel_size=4)
 
-        # On peut faire du "dropout" pour éviter l'overfitting . On désactive des neurones aléatoirement avec une proba choisie : ici 0.5
+        # Dropout pour éviter l'overfitting . On désactive des neurones aléatoirement avec une proba choisie : ici 0.5
         self.dropout = nn.Dropout(0.5)
 
         # Couche "fully connected layer" pour la classification

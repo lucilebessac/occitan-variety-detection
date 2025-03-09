@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 
 def train_model(model, train_loader, criterion, epochs, learning_rate):
     """
@@ -50,12 +50,13 @@ def evaluate_model(model, test_loader, criterion):
             total_exemples.extend(label.cpu().numpy()) # Stocke les labels réels  #.cpu c'est pour repasser en cpu car numpy ne manipule pas les trucs sur gpu
             total_pred.extend(predicted.cpu().numpy()) # Stocke les prédictions
 
-            avg_loss = total_loss / len(test_loader)
+        avg_loss = total_loss / len(test_loader)
 
         # Calcul des métriques
+        classif_report = classification_report(total_exemples, total_pred)
         accuracy = accuracy_score(total_exemples, total_pred)
         precision = precision_score(total_exemples, total_pred, average='weighted')
         recall = recall_score(total_exemples, total_pred, average='weighted')
         f1 = f1_score(total_exemples, total_pred, average='weighted')
 
-    return avg_loss, accuracy, precision, recall, f1
+    return avg_loss, accuracy, precision, recall, f1, classif_report
