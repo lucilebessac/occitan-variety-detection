@@ -80,6 +80,9 @@ def main() :
     learning_rate = 0.0005
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
+    #Sauvegarder le modèle entraîné
+    
+
     # Lancer l'évaluation
     print(f"Evaluation de Model Occitan CNN en cours.")
     avg_loss, accuracy, precision, recall, f1, classif_report = evaluate_model(model, test_loader, criterion)
