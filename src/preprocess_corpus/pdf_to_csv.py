@@ -25,7 +25,7 @@ def pdf_to_csv(pdf_path, output_path):
                 if phrase:  # Check if phrase is not empty
                     all_phrases.append(phrase)
         
-        # SPour skip les 2 premières lignes
+        # Pour skip les 2 premières lignes
         for phrase in all_phrases: #[2:]
             writer.writerow([phrase])  # LABEL À CHANGER
                     
@@ -40,6 +40,6 @@ def process_directory(pdf_dir, output_dir):
 
 # Appel fonction
 # pour tous les fichiers pdf dans le chemin donné
-pdf_dir = "../../data/V3/gascon/"  # PATH À CHANGER
-output_dir = "../../data/V3/gascon/"  # PATH À CHANGER
+pdf_dir = "../data/"  # PATH À CHANGER
+output_dir = "../data/"  # PATH À CHANGER
 process_directory(pdf_dir, output_dir)

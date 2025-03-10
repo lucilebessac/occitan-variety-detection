@@ -45,7 +45,7 @@ def evaluate_model(model, test_loader, criterion):
             total_loss += loss.item() #ajout loss de ce batch à la perte totale
         
             # Calcul des prédictions
-            valeurs_max, predicted = torch.max(outputs, 1) #torch.max(tensor, dim)dim=1 car on cherche sur l'axe des colonnes pour trouver pour chaque ligne (phrase), quelle est la classe la plus probable ? Oui j'ai galéré à comprendre aussi faut le voir visuellement en fait
+            valeurs_max, predicted = torch.max(outputs, 1) #torch.max(tensor, dim)dim=1 car on cherche sur l'axe des colonnes pour trouver pour chaque ligne (phrase), quelle est la classe la plus probable
             
             total_exemples.extend(label.cpu().numpy()) # Stocke les labels réels  #.cpu c'est pour repasser en cpu car numpy ne manipule pas les trucs sur gpu
             total_pred.extend(predicted.cpu().numpy()) # Stocke les prédictions

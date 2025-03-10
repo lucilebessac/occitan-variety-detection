@@ -24,6 +24,6 @@ def process_directory(input_dir, output_dir):
             output_path = os.path.join(output_dir, file.replace(".csv", "_oc-lengadoc-grclass.csv"))
             ajout_tag(input_path, output_path)
 
-input_dir = "../../data/V3/lengadocian/"  # PATH À CHANGER
-output_dir = "../../data/V3/lengadocian/clean/"  # PATH À CHANGER
+input_dir = "../data"  # PATH À CHANGER
+output_dir = "../data/clean/"  # PATH À CHANGER
 process_directory(input_dir, output_dir)
