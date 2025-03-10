@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 
 def main() : 
 
-    dossier_data = "../../data" ## PATH À ADAPTER
+    dossier_data = "../../../data" ## PATH À ADAPTER
 
     # Télécharger le modèle FastText occitan
     fasttext.util.download_model('oc', if_exists='ignore')
@@ -31,7 +31,7 @@ def main() :
     max_len = int(np.percentile(longueurs, 99))
     print(f"Longueur maximale après percentile 99% : {max_len}") #Test
 
-    # Tokeniser et Vectoriser
+    # Tokenisation et Vectorisation
     phrases_vectorisees_train = []
     for texte in X_train:
         phrase_tokenisee = tokenizer_occitan(texte)
@@ -51,7 +51,7 @@ def main() :
     phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=max_len, dtype="float16", padding="post")
     print(f"Le padding a été effectué.") # Test
 
-    # Convertir en tensors exploitables par Pytorch
+    # Conversion en tensors exploitables par Pytorch
     X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
     X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float32)
     y_train_tensor = torch.tensor(y_train, dtype=torch.long)
@@ -67,7 +67,7 @@ def main() :
     test_loader = DataLoader(test_data, batch_size=batch_size) 
     print(f"DataLoaders créés.") # Test
 
-    # Gérer le déséquilibre des classes
+    # Gestion du déséquilibre des classes
     class_weights = compter_labels(y_train, nbr_classes=3)
     criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
 
@@ -81,7 +81,7 @@ def main() :
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     #Sauvegarder le modèle entraîné
-    torch.save(model.state_dict(), f"../../trained_OccitanCNN.pth")
+    torch.save(model.state_dict(), "../../../trained_OccitanCNN.pth")
     print("Modèle entraîné sauvegardé.")
 
     # Lancer l'évaluation
