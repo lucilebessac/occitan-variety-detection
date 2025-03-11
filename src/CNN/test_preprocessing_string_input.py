@@ -13,3 +13,4 @@ phrase_vectorisee_padded = padding_liste_phrases(phrase_vectorisee, 56)
 print("phrase_vectorisee_padded:", phrase_vectorisee_padded)
 phrase_tensor = tensorizer_phrase(phrase_vectorisee_padded, torch.float32)
 print("phrase_tensor:", phrase_tensor)
+
