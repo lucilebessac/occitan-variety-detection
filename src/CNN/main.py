@@ -1,13 +1,11 @@
-from dataset import charger_corpus, tokenizer_occitan
+from dataset import charger_corpus, tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext   
 from occitanCNN import OccitanCNN
 from utils import compter_labels, save_results
 from training import train_model, evaluate_model
 
-import fasttext.util
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 
 def main() : 
@@ -15,8 +13,7 @@ def main() :
     dossier_data = "../../data" ## PATH À ADAPTER
 
     # Télécharger le modèle FastText occitan
-    fasttext.util.download_model('oc', if_exists='ignore')
-    model = fasttext.load_model('cc.oc.300.bin') 
+    model = charger_fasttext()
 
     # Charger le corpus, obtenir le texte et les labels
     corpus, labels = charger_corpus(dossier_data)
@@ -35,27 +32,27 @@ def main() :
     phrases_vectorisees_train = []
     for texte in X_train:
         phrase_tokenisee = tokenizer_occitan(texte)
-        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrase_vectorisee = vectorizer_phrase(phrase_tokenisee, model, max_len)
         phrases_vectorisees_train.append(phrase_vectorisee)
     print(f"X_train est tokenisée et vectorisée.") # Test
     
     phrases_vectorisees_test = []
     for texte in X_test:
         phrase_tokenisee = tokenizer_occitan(texte)
-        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrase_vectorisee = vectorizer_phrase(phrase_tokenisee, model, max_len)
         phrases_vectorisees_test.append(phrase_vectorisee)
     print(f"X_test est tokenisée et vectorisée.") # Test
 
     # Padding
-    phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=max_len, dtype="float16", padding="post") 
-    phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=max_len, dtype="float16", padding="post")
+    phrases_vectorisees_train_padded = padding_liste_phrases(phrases_vectorisees_train, max_len)
+    phrases_vectorisees_test_padded = padding_liste_phrases(phrases_vectorisees_test, max_len)
     print(f"Le padding a été effectué.") # Test
 
     # Convertir en tensors exploitables par Pytorch
-    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
-    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float32)
-    y_train_tensor = torch.tensor(y_train, dtype=torch.long)
-    y_test_tensor = torch.tensor(y_test, dtype=torch.long)
+    X_train_tensor = tensorizer_phrase(phrases_vectorisees_train_padded, dtype=torch.float32)
+    X_test_tensor = tensorizer_phrase(phrases_vectorisees_test_padded, dtype=torch.float32)
+    y_train_tensor = tensorizer_phrase(y_train, dtype=torch.long)
+    y_test_tensor = tensorizer_phrase(y_test, dtype=torch.long)
     print(f"Conversion en tensor effectuée.") # Test
 
     # Faire des batches 

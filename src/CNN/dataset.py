@@ -1,6 +1,11 @@
 import re
 import os
 import csv
+import fasttext.util
+import torch
+
+from keras.preprocessing.sequence import pad_sequences
+
 
 def charger_corpus(dossier_data):
     corpus = []
@@ -21,7 +26,7 @@ def charger_corpus(dossier_data):
 
     return corpus, labels
 
-def tokenizer_occitan(texte):
+def tokenizer_occitan(texte): # Returns List[str]
 
     texte = re.sub('’', "'", texte) 
     texte = re.sub(r"([a-zàèòáéíóúïüç])\-([nzu])\-([a-zàèòáéíóúïüç])", r"\1 - \2 - \3", texte, flags=re.IGNORECASE)
@@ -36,3 +41,21 @@ def tokenizer_occitan(texte):
     tokens = re.split(r"\s+", texte.strip())
 
     return tokens
+
+def charger_fasttext():
+    # Télécharger le modèle FastText occitan
+    fasttext.util.download_model('oc', if_exists='ignore')
+    model = fasttext.load_model('cc.oc.300.bin')
+    return model
+
+def vectorizer_phrase(phrase_tokenisee, model, max_len): # Returns List[List[float]]
+    phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+    return phrase_vectorisee
+
+def padding_liste_phrases(phrase_vectorisee, max_len):
+    phrase_vectorisee_padded = pad_sequences(phrase_vectorisee, maxlen=max_len, dtype="float16", padding="post")
+    return phrase_vectorisee_padded
+
+def tensorizer_phrase(phrase_vectorisee_padded, d_type):
+    phrase_tensor = torch.tensor(phrase_vectorisee_padded, dtype=d_type)
+    return phrase_tensor
