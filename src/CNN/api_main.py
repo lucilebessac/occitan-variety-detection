@@ -1,29 +1,38 @@
-from fastapi import FastAPI
-
-from occitanCNN import OccitanCNN
-from dataset import tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext # PB DE CHEMIN À RÉSOUDRE
-import torch
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from occitanCNN import OccitanCNN
+from dataset import tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext # PB DE CHEMIN ?
 
+import torch
 
 #Initialisation de FastAPI
 app = FastAPI()
 
-max_len = 53
-labels = ["languedocien","gascon","autre"]
-
-#Cherche si gpu ou cpu -> optimise 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Importer le modèle pretrained
-cnn_model = OccitanCNN(fasttext_embedding_dim=300, nb_filtres=100)
-cnn_model.load_state_dict(torch.load("model.pth")) # PATH A CHANGER
-cnn_model.eval()
-
-vec_model = charger_fasttext()
-
 class TextInput(BaseModel):
     text: str
+
+max_len = 53
+labels = ["gascon","languedocien","autre"]
+
+# À cherger au démarrage de l'API
+@app.on_event("startup")
+async def load_models():
+    global vec_model, cnn_model
+    
+    try:
+        print("Chargement du modèle FastText ...")
+        vec_model = charger_fasttext()
+        
+        print("Chargement du CNN...")
+        cnn_model = OccitanCNN(fasttext_embedding_dim=300, nb_filtres=100)
+        cnn_model.load_state_dict(torch.load("trained_OccitanCNN.pth"))
+        cnn_model.eval()
+        
+        print("Modèles chargés (ouf!)")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Échec")
+
 
 #Permet de tester si l’API fonctionne.
 @app.get("/")
@@ -48,5 +57,7 @@ async def prediction(data: TextInput): # TextPost est un objet qui contient un a
 
     return {"text": data.text, "prediction": labels[classe_predite]}
 
-
-
+# Run l'API avec: uvicorn api:app --reload
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("api_main:app", host="0.0.0.0", port=8000, reload=True)

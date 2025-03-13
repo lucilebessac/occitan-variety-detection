@@ -25,8 +25,8 @@ def main() :
 
     # Limiter la longueur des phrases (car problème de RAM)
     longueurs = [len(tokenizer_occitan(texte)) for texte in X_train + X_test]
-    max_len = int(np.percentile(longueurs, 99))
-    print(f"Longueur maximale après percentile 99% : {max_len}") #Test
+    max_len = int(np.percentile(longueurs, 99)) #max_len = 53
+    print(f"Longueur maximale après percentile 99% : {max_len}") #max_len = 53
 
     # Tokeniser et Vectoriser
     phrases_vectorisees_train = []
