@@ -1,22 +1,19 @@
-from dataset import charger_corpus, tokenizer_occitan
+from dataset import charger_corpus, tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext   
 from occitanCNN import OccitanCNN
 from utils import compter_labels, save_results
 from training import train_model, evaluate_model
 
-import fasttext.util
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 
 def main() : 
 
-    dossier_data = "../../../data" ## PATH À ADAPTER
+    dossier_data = "../data" ## PATH À ADAPTER
 
     # Télécharger le modèle FastText occitan
-    fasttext.util.download_model('oc', if_exists='ignore')
-    model = fasttext.load_model('cc.oc.300.bin') 
+    model = charger_fasttext()
 
     # Charger le corpus, obtenir le texte et les labels
     corpus, labels = charger_corpus(dossier_data)
@@ -28,34 +25,34 @@ def main() :
 
     # Limiter la longueur des phrases (car problème de RAM)
     longueurs = [len(tokenizer_occitan(texte)) for texte in X_train + X_test]
-    max_len = int(np.percentile(longueurs, 99))
-    print(f"Longueur maximale après percentile 99% : {max_len}") #Test
+    max_len = int(np.percentile(longueurs, 99)) #max_len = 53
+    print(f"Longueur maximale après percentile 99% : {max_len}") #max_len = 53
 
-    # Tokenisation et Vectorisation
+    # Tokeniser et Vectoriser
     phrases_vectorisees_train = []
     for texte in X_train:
         phrase_tokenisee = tokenizer_occitan(texte)
-        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrase_vectorisee = vectorizer_phrase(phrase_tokenisee, model, max_len)
         phrases_vectorisees_train.append(phrase_vectorisee)
     print(f"X_train est tokenisée et vectorisée.") # Test
     
     phrases_vectorisees_test = []
     for texte in X_test:
         phrase_tokenisee = tokenizer_occitan(texte)
-        phrase_vectorisee = [model.get_word_vector(mot) for mot in phrase_tokenisee][:max_len]
+        phrase_vectorisee = vectorizer_phrase(phrase_tokenisee, model, max_len)
         phrases_vectorisees_test.append(phrase_vectorisee)
     print(f"X_test est tokenisée et vectorisée.") # Test
 
     # Padding
-    phrases_vectorisees_train_padded = pad_sequences(phrases_vectorisees_train, maxlen=max_len, dtype="float16", padding="post") 
-    phrases_vectorisees_test_padded = pad_sequences(phrases_vectorisees_test, maxlen=max_len, dtype="float16", padding="post")
+    phrases_vectorisees_train_padded = padding_liste_phrases(phrases_vectorisees_train, max_len)
+    phrases_vectorisees_test_padded = padding_liste_phrases(phrases_vectorisees_test, max_len)
     print(f"Le padding a été effectué.") # Test
 
-    # Conversion en tensors exploitables par Pytorch
-    X_train_tensor = torch.tensor(phrases_vectorisees_train_padded, dtype=torch.float32)
-    X_test_tensor = torch.tensor(phrases_vectorisees_test_padded, dtype=torch.float32)
-    y_train_tensor = torch.tensor(y_train, dtype=torch.long)
-    y_test_tensor = torch.tensor(y_test, dtype=torch.long)
+    # Convertir en tensors exploitables par Pytorch
+    X_train_tensor = tensorizer_phrase(phrases_vectorisees_train_padded, dtype=torch.float32)
+    X_test_tensor = tensorizer_phrase(phrases_vectorisees_test_padded, dtype=torch.float32)
+    y_train_tensor = tensorizer_phrase(y_train, dtype=torch.long)
+    y_test_tensor = tensorizer_phrase(y_test, dtype=torch.long)
     print(f"Conversion en tensor effectuée.") # Test
 
     # Faire des batches 
@@ -67,7 +64,7 @@ def main() :
     test_loader = DataLoader(test_data, batch_size=batch_size) 
     print(f"DataLoaders créés.") # Test
 
-    # Gestion du déséquilibre des classes
+    # Gérer le déséquilibre des classes
     class_weights = compter_labels(y_train, nbr_classes=3)
     criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
 
@@ -76,12 +73,12 @@ def main() :
     print(f"Model Occitan CNN initialisé, lancement de l'entrainement.")
 
     # Lancer le train
-    epochs = 20
+    epochs = 15
     learning_rate = 0.0005
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     #Sauvegarder le modèle entraîné
-    torch.save(model.state_dict(), "../../../trained_OccitanCNN.pth")
+    torch.save(model.state_dict(), f"./pretrained_models/trained_OccitanCNN.pth")
     print("Modèle entraîné sauvegardé.")
 
     # Lancer l'évaluation
