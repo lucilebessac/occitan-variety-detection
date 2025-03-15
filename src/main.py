@@ -4,6 +4,7 @@ from utils import compter_labels, save_results
 from training import train_model, evaluate_model
 
 import numpy as np
+import os
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
@@ -78,8 +79,10 @@ def main() :
     train_model(model, train_loader, criterion, epochs=epochs, learning_rate=learning_rate)
 
     #Sauvegarder le modèle entraîné
-    torch.save(model.state_dict(), f"./pretrained_models/trained_OccitanCNN.pth")
-    print("Modèle entraîné sauvegardé.")
+    dossier_models = "pretrained_models"
+    model_path = os.path.join(dossier_models, "trained_OccitanCNN.pth")
+    torch.save(model.state_dict(), model_path)
+    print(f"Modèle entraîné sauvegardé dans : {model_path}")
 
     # Lancer l'évaluation
     print(f"Evaluation de Model Occitan CNN en cours.")

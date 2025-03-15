@@ -45,7 +45,7 @@ def tokenizer_occitan(texte): # Returns List[str]
 def charger_fasttext():
     # Télécharger le modèle FastText occitan
     fasttext.util.download_model('oc', if_exists='ignore')
-    model = fasttext.load_model('./pretrained_models/cc.oc.300.bin')
+    model = fasttext.load_model('cc.oc.300.bin')
     return model
 
 def vectorizer_phrase(phrase_tokenisee, model, max_len): # Returns List[List[float]]
@@ -53,9 +53,9 @@ def vectorizer_phrase(phrase_tokenisee, model, max_len): # Returns List[List[flo
     return phrase_vectorisee
 
 def padding_liste_phrases(phrase_vectorisee, max_len):
-    phrase_vectorisee_padded = pad_sequences([phrase_vectorisee], maxlen=max_len, dtype="float16", padding="post")
+    phrase_vectorisee_padded = pad_sequences(phrase_vectorisee, maxlen=max_len, dtype="float16", padding="post")
     return phrase_vectorisee_padded
 
-def tensorizer_phrase(phrase_vectorisee_padded, d_type):
-    phrase_tensor = torch.tensor(phrase_vectorisee_padded, dtype=d_type)
+def tensorizer_phrase(phrase_vectorisee_padded, dtype):
+    phrase_tensor = torch.tensor(phrase_vectorisee_padded, dtype=dtype)
     return phrase_tensor

@@ -16,7 +16,7 @@ def compter_labels(labels, nbr_classes) : #obtenir des poids selon la proportion
 
 def save_results(epochs, learning_rate, avg_loss, accuracy, precision, recall, f1, classif_report): 
     
-    dossier_resultats = "../results"
+    dossier_resultats = "results"
     os.makedirs(dossier_resultats, exist_ok=True)
     nom_fichier = f"epoch={epochs}_lr={learning_rate}.csv"
     chemin_fichier = os.path.join(dossier_resultats, nom_fichier)
