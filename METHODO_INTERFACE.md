@@ -42,7 +42,7 @@ L'objectif final de ce double projet est de contribuer aux ressources NLP pour l
 
 ### Pipeline
 
-Décrite dans [README_INTERFACE.md] (README_INTERFACE.md).
+Décrite dans [README.md](README.md).
 
 
 ### Perspectives d'amélioration
