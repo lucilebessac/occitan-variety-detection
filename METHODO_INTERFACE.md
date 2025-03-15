@@ -1,4 +1,7 @@
 # Interface pour Détecteur de Dialectes Occitans
 
-## Objectifs du projet
+## Objectif du projet
+
+Ce projet a pour but
+Il fait sui
 
