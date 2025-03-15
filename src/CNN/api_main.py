@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from .occitanCNN import OccitanCNN
-from .dataset import tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext # PB DE CHEMIN ?
+from occitanCNN import OccitanCNN
+from dataset import tokenizer_occitan, vectorizer_phrase, padding_liste_phrases, tensorizer_phrase, charger_fasttext # PB DE CHEMIN ?
 
 import torch
+import os
 
 #Initialisation de FastAPI
 app = FastAPI()
@@ -41,8 +42,8 @@ def root():
 
 
 #Requête de l'utilisateur (POST)
-@app.post("/prediction/")
-async def prediction(data: TextInput): # TextPost est un objet qui contient un attribut text / il faut le définir
+@app.post("/prediction")
+async def prediction(data: str=Form(...)): # TextPost est un objet qui contient un attribut text / il faut le définir
 
     # transformation dans un format qui convient à notre modèle
     input_tokenise = tokenizer_occitan(data.text)
@@ -55,9 +56,10 @@ async def prediction(data: TextInput): # TextPost est un objet qui contient un a
         prediction = cnn_model(input_tensor)
         classe_predite = torch.argmax(prediction, dim=1).item()
 
-    return {"text": data.text, "prediction": labels[classe_predite]}
+    return {"text": data, "prediction": labels[classe_predite]}
 
 # Run l'API avec: uvicorn api:app --reload
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("api_main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("api_main:app", host="0.0.0.0", port=port, reload=True)
