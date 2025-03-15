@@ -8,3 +8,4 @@ torch==2.6.0
 fastapi
 uvicorn
 pydantic
+tensorflow
