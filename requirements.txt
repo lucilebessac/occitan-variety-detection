@@ -1,9 +1,9 @@
-fasttext#==0.9.3
-fitz#==0.0.1.dev2
-keras#==3.9.0
-numpy#==2.2.3
-scikit-learn#==1.6.1
-torch#==2.6.0
+fasttext
+fitz
+keras
+numpy
+scikit-learn
+torch
 fastapi
 uvicorn
 pydantic
