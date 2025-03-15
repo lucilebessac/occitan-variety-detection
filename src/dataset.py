@@ -43,9 +43,15 @@ def tokenizer_occitan(texte): # Returns List[str]
     return tokens
 
 def charger_fasttext():
-    # Télécharger le modèle FastText occitan
-    fasttext.util.download_model('oc', if_exists='ignore')
-    model = fasttext.load_model('./pretrained_models/cc.oc.300.bin')
+    destination_dossier = "pretrained_models"
+    model_path = os.path.join(destination_dossier, "cc.oc.300.bin")
+
+    if not os.path.exists(model_path):
+        fasttext.util.download_model('oc', if_exists='ignore')
+        os.rename("cc.oc.300.bin", model_path)  # Déplacer/renommer le fichier téléchargé
+
+    # Charger le modèle depuis le bon dossier
+    model = fasttext.load_model(model_path)
     return model
 
 def vectorizer_phrase(phrase_tokenisee, model, max_len): # Returns List[List[float]]
