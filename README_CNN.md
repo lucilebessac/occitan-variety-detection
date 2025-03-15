@@ -77,7 +77,7 @@ Le programme suit les étapes suivantes :
 9.  Entrainer le CNN
 10. Évaluler le CNN (précision, rappel, F1)
 
-> Notre méthodologie de travail est détaillée dans [METHODO.md](METHODO.md)
+> Notre méthodologie de travail est détaillée dans [METHODO_CNN.md](METHODO_CNN.md)
 
 ## Paramètres
 - Taille de batch : 16

@@ -32,6 +32,7 @@ L'application est accessible via une **API REST** avec **FastAPI** qui s'exécut
 ```
 uvicorn app:app --reload
 ```
+*Attention, le téléchargement des modèles pré-entrainés des vecteurs peut être long.*
 
 **2. Une fois l'API lancée, accédez-y à l'adresse**
 ```
@@ -90,7 +91,7 @@ Vous pouvez utiliser [le traducteur automatique revirada](https://revirada.eu/in
 
 > La pipeline de création, entraînement et évaluation du CNN est détaillée dans [README_CNN.md](README_CNN.md)
 
-> Notre méthodologie pour la création, l'entraînement et l'évaluation du CNN est détaillée dans [METHODO.md](METHODO.md)
+> Notre méthodologie pour la création, l'entraînement et l'évaluation du CNN est détaillée dans [METHODO_CNN.md](METHODO_CNN.md)
 
 > Notre méthodologie pour la création de l'API est détaillée dans [METHODO_INTERFACE.md](METHODO_INTERFACE.md)
 
