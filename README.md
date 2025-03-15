@@ -37,9 +37,11 @@ uvicorn app:app --reload
 ```
 http://127.0.0.1:8000/
 ```
-**3. Dans la barre de recherche, entrez une phrase en occitan gascon ou occitan languedocien et appuyez sur "Analyser".**
+**3. Dans le champ dédié, entrez une phrase en occitan gascon ou  languedocien et appuyez sur "Analyser".**
 
 Le dialecte de la phrase apparaît à l'écran.
+
+Vous pouvez utiliser [le traducteur automatique revirada](https://revirada.eu/index) pour traduire des phrases du français vers l'occitan.
 
 ---
 
