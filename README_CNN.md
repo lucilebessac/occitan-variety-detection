@@ -92,3 +92,9 @@ Le programme suit les étapes suivantes :
 - Precision
 - Rappel
 - F-mesure
+
+## Performances du modèle
+- Accuracy: 96.70%
+- Precision: 0.9739
+- Recall: 0.9670
+- F1 Score: 0.9692
