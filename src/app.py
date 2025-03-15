@@ -22,7 +22,7 @@ async def load_models():
 
         print("Chargement du CNN...")
         cnn_model = OccitanCNN(fasttext_embedding_dim=300, nb_filtres=100)
-        cnn_model.load_state_dict(torch.load("./pretrained_models/trained_OccitanCNN.pth"))
+        cnn_model.load_state_dict(torch.load("pretrained_models/trained_OccitanCNN.pth"))
         cnn_model.eval()
 
         print("Modèles chargés (ouf!)")
@@ -72,7 +72,7 @@ async def prediction(text: str = Form(...)):
     # Transformation dans un format que le modèle peut traiter
     input_tokenise = tokenizer_occitan(text)
     input_vectorise = vectorizer_phrase(input_tokenise, vec_model, max_len)
-    input_vectorise_padded = padding_liste_phrases(input_vectorise, max_len)
+    input_vectorise_padded = padding_liste_phrases([input_vectorise], max_len)
     input_tensor = tensorizer_phrase(input_vectorise_padded, torch.float32)
 
     # Prédiction
